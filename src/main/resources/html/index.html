@@ -1,0 +1,198 @@
+<html>
+	<head>
+	<title>Cadastro de Usuarios</title>
+	</head>
+	<body>
+	
+	<div id="cadastro">
+		<h1>Novo Usuario</h1>
+		<input type="hidden" name="id" id="id">
+		<input type="text" name="nome" id="nome">
+		<input type="number" name="idade" id="idade">
+		<input type="button" id="btnEnviar" value="Enviar">
+		
+		<br>
+		<h3>Endere�os <input type="button" 
+			id="btnAddEnd" value="+" 
+			onclick="exibirEsconderPnlEndereco();"></h3>
+		
+		<div id="pnlAddEndereco" style="display:none">
+			<input type="text" name="apelido" 
+				id="apelido" placeholder="Apelido">
+			<p>
+			<input type="text" name="cep" 
+				id="cep" placeholder="CEP" 
+				onblur="buscarCep();">
+			<input type="text" name="logradouro" id="logradouro" 
+				placeholder="Logradouro">
+			<input type="text" name="complemento" id="complemento"
+				placeholder="Complemento">
+			<p>
+			<input type="text" name="bairro" id="bairro" 
+				placeholder="Bairro">
+			<input type="text" name="localidade" id="localidade"
+				placeholder="Localidade">
+			<p>
+			<select name="uf" id="uf">
+				<option value="">Selecione</option>
+				<option value="AC">AC</option>
+				<option value="AL">AL</option>
+				<option value="AM">AM</option>
+				<option value="AP">AP</option>
+				<option value="BA">BA</option>
+				<option value="CE">CE</option>
+				<option value="DF">DF</option>
+				<option value="ES">ES</option>
+				<option value="GO">GO</option>
+				<option value="MA">MA</option>
+				<option value="MG">MG</option>
+				<option value="MS">MS</option>
+				<option value="MT">MT</option>
+				<option value="PA">PA</option>
+				<option value="PB">PB</option>
+				<option value="PE">PE</option>
+				<option value="PI">PI</option>
+				<option value="PR">PR</option>
+				<option value="RJ">RJ</option>
+				<option value="RN">RN</option>
+				<option value="RS">RS</option>
+				<option value="RO">RO</option>
+				<option value="RR">RR</option>
+				<option value="SC">SC</option>
+				<option value="SE">SE</option>
+				<option value="SP">SP</option>
+				<option value="TO">TO</option>
+			 </select>
+			<p>
+			<input type="button" id="btnSalvarEnd" value="Salvar">
+		</div>
+		
+		<table id="tblEnderecos"></table>
+		
+	</div>
+	
+	<div id="listagem">
+		<h1>Usuarios Cadastrados</h1>
+		<table id="tblUsuarios"></table>
+	</div>
+	
+	<script
+  src="https://code.jquery.com/jquery-3.3.1.min.js"
+  integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+  crossorigin="anonymous"></script>
+  	
+  	<script type="text/javascript">
+  	
+  		function buscarCep(){
+  			var cep = $('#cep').val().replace(/\D/g,'');
+  			console.log(cep);
+  			$.get("https://viacep.com.br/ws/"+cep+"/json/", 
+	  			function(dadosCep){
+	  					
+  				
+	  			});
+  		}
+  	
+  		function exibirEsconderPnlEndereco(){
+  			var pnlEndereco = $('#pnlAddEndereco');
+  			var btnAddEndereco = $('#btnAddEnd');
+  			
+  			if(pnlEndereco.is(':visible')){
+  				pnlEndereco.hide();
+  				btnAddEndereco.val("+");
+  			}else{
+  				pnlEndereco.show();
+  				btnAddEndereco.val("-");
+  			}
+  		}
+  	
+  		function listarUsuarios(){
+  			$.get("/api/usuarios", function(data){
+  				$("#tblUsuarios").empty();
+  				$("#tblUsuarios").append('<tr>'+
+							'<th>Codigo</td>'+
+							'<th>Nome</td>'+
+							'<th>Idade</td>'+
+							'<th>Acoes</td>'+
+							'</tr>');
+  				data.forEach(function(usuario){
+  					$("#tblUsuarios").append('<tr>'+
+  							'<td id="td_id'+usuario.id+'">'+usuario.id+'</td>'+
+  							'<td id="td_nome'+usuario.id+'">'+usuario.nome+'</td>'+
+  							'<td id="td_idade'+usuario.id+'">'+usuario.idade+'</td>'+
+  							'<td><button onclick="editar('+usuario.id+')">Alterar</button>'
+  							+'<button onclick="excluir('+usuario.id+')">Excluir</button></td>'+
+  							'</tr>');
+  				});
+  			});
+  		};
+  		
+  		listarUsuarios();
+  	
+  		$("#btnEnviar").click(function(){
+  			var id = $('#id').val();
+  			var nome = $('#nome').val();
+  			var idade = $('#idade').val();
+  			console.log(id);
+
+  			if(id){
+  				$.ajax({
+ 	  			   url: '/api/usuarios',
+ 	  			   data: JSON.stringify({"id":id,"nome":nome,"idade":idade}),
+ 	  			   type: 'PUT',
+ 	  			   success: function(data) {
+ 	  				    $('#id').val('');
+		  				$('#nome').val('');
+		  	  			$('#idade').val('');
+		  	  			$('#nome').focus();
+		  				listarUsuarios();
+ 	  			   }
+ 	  			});
+  	  		}else{
+                $.ajax({
+                    url: '/api/usuarios',
+                    data: JSON.stringify({"nome":nome,"idade":idade}),
+                    contentType:"application/json; charset=utf-8",
+                    dataType:"json",
+                    type: 'POST',
+                    success: function(data) {
+                        console.log(data);
+
+                        $('#nome').val('');
+                        $('#idade').val('');
+                        $('#nome').focus();
+                        listarUsuarios();
+                    }
+                });
+  	  	  	}
+  		});
+  		
+  		function editar(id){
+  			console.log("Iniciar a edicao "+id);
+			var id = $('#td_id'+id).text();
+			var nome = $('#td_nome'+id).text();
+			var idade = $('#td_idade'+id).text();
+
+			$('#id').val(id);
+			$('#nome').val(nome);
+	  		$('#idade').val(idade);
+  		}
+  		
+  		function excluir(id){
+	  			console.log("Excluindo registro ID: "+id);	  			
+	  			$.ajax({
+	  			   url: '/api/usuarios/'+id,
+	  			   type: 'DELETE',
+	  			   success: function(data) {
+	  				 listarUsuarios();
+	  			   }
+	  			});
+  		}
+  		
+  	</script>
+  
+  
+  
+  
+	</body>
+</html>
