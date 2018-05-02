@@ -1,26 +1,11 @@
 package br.com.anhanguera.cadastro.usuario;
 
-import java.beans.PropertyVetoException;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.sql.SQLException;
-
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import br.com.anhanguera.cadastro.usuario.controladores.UsuarioController;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.servlet.DefaultServlet;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
 import org.eclipse.jetty.util.resource.Resource;
-
-import com.google.gson.Gson;
-
-import br.com.anhanguera.cadastro.usuario.bd.UsuarioDAO;
-import br.com.anhanguera.cadastro.usuario.dominio.Usuario;
 
 public class Principal {
 	

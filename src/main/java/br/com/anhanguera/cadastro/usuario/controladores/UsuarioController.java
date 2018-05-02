@@ -1,7 +1,7 @@
 package br.com.anhanguera.cadastro.usuario.controladores;
 
 
-import br.com.anhanguera.cadastro.usuario.bd.UsuarioDAO;
+import br.com.anhanguera.cadastro.usuario.dao.UsuarioDAO;
 import br.com.anhanguera.cadastro.usuario.dominio.Usuario;
 
 import javax.ws.rs.*;

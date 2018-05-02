@@ -1,4 +1,4 @@
-package br.com.anhanguera.cadastro.usuario.bd;
+package br.com.anhanguera.cadastro.usuario.dao;
 
 import java.beans.PropertyVetoException;
 import java.sql.Connection;
@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import br.com.anhanguera.cadastro.usuario.bd.PoolConexoesMysql;
 import br.com.anhanguera.cadastro.usuario.dominio.Usuario;
 
 public class UsuarioDAO {
