@@ -24,7 +24,6 @@ public class Principal {
 		holderPadrao.setInitParameter("dirAllowed", "true");
 		servletHandler.addServlet(holderPadrao, "/");
 
-
 		ServletHolder jerseyServlet = servletHandler.addServlet(
 				org.glassfish.jersey.servlet.ServletContainer.class, "/api/*");
 		jerseyServlet.setInitOrder(0);

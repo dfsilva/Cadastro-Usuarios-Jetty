@@ -1,27 +1,31 @@
 package br.com.anhanguera.cadastro.usuario.dao;
 
-import br.com.anhanguera.cadastro.usuario.bd.EntityManagerInit;
+import br.com.anhanguera.cadastro.usuario.bd.CadastroEMFactory;
 import br.com.anhanguera.cadastro.usuario.dominio.Usuario;
 
+import javax.persistence.EntityManager;
 import java.util.List;
 
 public class HibernateUsuarioDAO {
 
-    public static Usuario inserir(Usuario usuario){
-        EntityManagerInit.getEntityManager().persist(usuario);
+    private EntityManager em = CadastroEMFactory.getEntityManager();
+
+    public Usuario inserir(Usuario usuario){
+        em.getTransaction().begin();
+        em.persist(usuario);
+        em.getTransaction().commit();
         return usuario;
     }
 
-    public static List<Usuario> listar(){
-      return EntityManagerInit.getEntityManager().createQuery("from "+Usuario.class.getName()+" u").getResultList();
+    public List<Usuario> listar(){
+      return em.createQuery("from "+Usuario.class.getName()+" u").getResultList();
     }
 
-
-    public static void atualizar(Usuario usuario){
-        EntityManagerInit.getEntityManager().merge(usuario);
+    public void atualizar(Usuario usuario){
+        em.merge(usuario);
     }
 
-    public static void excluir(Long idUsuario){
-        EntityManagerInit.getEntityManager().remove(new Usuario(idUsuario));
+    public void excluir(Long idUsuario){
+        em.remove(new Usuario(idUsuario));
     }
 }
